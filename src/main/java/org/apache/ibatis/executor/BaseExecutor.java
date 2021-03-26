@@ -149,10 +149,14 @@ public abstract class BaseExecutor implements Executor {
     List<E> list;
     try {
       queryStack++;
+      // 从本地获取缓存，第一次缓存肯定是 null，会调用 queryFromDatabase
       list = resultHandler == null ? (List<E>) localCache.getObject(key) : null;
       if (list != null) {
+        // 如果本地有，直接从本地拿出执行结果
         handleLocallyCachedOutputParameters(ms, key, parameter, boundSql);
       } else {
+        // 本地没有，调用 queryFromDatabase 获取
+        // 第一次查询肯定是没有，会调用 queryFromDatabase
         list = queryFromDatabase(ms, parameter, rowBounds, resultHandler, key, boundSql);
       }
     } finally {
@@ -317,14 +321,23 @@ public abstract class BaseExecutor implements Executor {
     }
   }
 
+  /**
+  * 从数据库获取数据的方法
+  */
   private <E> List<E> queryFromDatabase(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql) throws SQLException {
     List<E> list;
+    // 这里的key是：-1163802487:-735866871:org.mybatis.example.BlogMapper.selectBlog:0:2147483647:select  * from blog where id = ?:101:development
+    // value 是：EXECUTION_PLACEHOLDER
     localCache.putObject(key, EXECUTION_PLACEHOLDER);
     try {
+      // 调用数据库
       list = doQuery(ms, parameter, rowBounds, resultHandler, boundSql);
     } finally {
+      // 最终会从缓存里移除缓存的 key
       localCache.removeObject(key);
     }
+    // 这里的 value 是查询出来的数据
+    // 将查询出来的数据放入缓存 key 对应的 value
     localCache.putObject(key, list);
     if (ms.getStatementType() == StatementType.CALLABLE) {
       localOutputParameterCache.putObject(key, parameter);

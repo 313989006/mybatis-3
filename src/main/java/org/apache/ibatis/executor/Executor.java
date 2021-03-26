@@ -30,24 +30,36 @@ import org.apache.ibatis.transaction.Transaction;
 /**
  * @author Clinton Begin
  */
+/**
+* MyBatis 执行器的顶级接口
+ * 有 3 种执行器，默认是 Simple 形式
+ * Simple，Batch，Reuse
+*/
 public interface Executor {
 
+  // 不需要 ResultHandler
   ResultHandler NO_RESULT_HANDLER = null;
 
+  // 更新
   int update(MappedStatement ms, Object parameter) throws SQLException;
 
+  // 查询，带分页，带缓存
   <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) throws SQLException;
 
+  // 查询，带分页
   <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
 
   <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException;
 
+  // 刷新批处理语句
   List<BatchResult> flushStatements() throws SQLException;
 
+  // 提交和回滚，参数是否要强制
   void commit(boolean required) throws SQLException;
 
   void rollback(boolean required) throws SQLException;
 
+  // 创建 CacheKey
   CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql);
 
   boolean isCached(MappedStatement ms, CacheKey key);

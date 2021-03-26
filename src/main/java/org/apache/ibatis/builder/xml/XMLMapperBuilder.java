@@ -106,6 +106,19 @@ public class XMLMapperBuilder extends BaseBuilder {
   }
 
   private void configurationElement(XNode context) {
+
+    // context 就是 xml 文件里的内容
+//    <mapper namespace="org.mybatis.example.BlogMapper">
+  //    <resultMap id="BaseResultMap" type="org.mybatis.demo.Blog">
+  //        <id jdbcType="INTEGER" column="id" property="id"/>
+  //        <result jdbcType="VARCHAR" column="name" property="name"/>
+  //        <result jdbcType="VARCHAR" column="content" property="content"/>
+  //    </resultMap>
+  //    <select parameterType="java.lang.Integer" resultMap="BaseResultMap" id="selectBlog">
+  //
+  //      select  * from blog where id = #{id}
+  //    </select>
+//    </mapper>
     try {
       String namespace = context.getStringAttribute("namespace");
       if (namespace == null || namespace.equals("")) {

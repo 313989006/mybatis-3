@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <properties resource="jdbc.properties"/>
+
+  <settings>
+    <!-- 打印查询语句 -->
+    <setting name="logImpl" value="STDOUT_LOGGING" />
+  </settings>
+
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+
+  <!--必须要放在上面，因为上面要获取 driver,url,username,password-->
+  <!--<properties resource="jdbc.properties"/>-->
+
+  <mappers>
+    <!--<mapper resource="mapper/BlogMapper.xml"/>-->
+  </mappers>
+
+</configuration>

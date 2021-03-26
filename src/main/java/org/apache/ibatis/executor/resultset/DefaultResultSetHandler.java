@@ -185,12 +185,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
     int resultSetCount = 0;
     ResultSetWrapper rsw = getFirstResultSet(stmt);
-
     List<ResultMap> resultMaps = mappedStatement.getResultMaps();
     int resultMapCount = resultMaps.size();
     validateResultMapsCount(rsw, resultMapCount);
     while (rsw != null && resultMapCount > resultSetCount) {
       ResultMap resultMap = resultMaps.get(resultSetCount);
+      // 调用这个方法把数据放到对应的字段
       handleResultSet(rsw, resultMap, multipleResults, null);
       rsw = getNextResultSet(stmt);
       cleanUpAfterHandlingResultSet();
